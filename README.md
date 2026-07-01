@@ -18,10 +18,10 @@ Designed and developed by **Arghyadeep Paul** (*Associate Technical Consultant �
 
 ---
 
-> [!TIP]
-> 🤝 **Open-Source Contributors Welcome!**
+> [!NOTE]
+> 📋 **Project Status: Proposal & Prototyping Stage**
 > 
-> This repository is a functional solution accelerator template. We are seeking open-source contributions to build out production UI modules and alternative algorithm layers! Read the [Contributing](#-contributing--open-source-help-needed) section below.
+> This solution accelerator is in the **proposal stage**. The campaign presentation deck (`CI360_Campaign_Plan.pptx`) has been submitted to management, and we are currently waiting for formal approval. Development will proceed aggressively once approved. This is an open-source prototype, and we are actively looking for collaborators to design and expand features. Check out the [Contributing](#-contributing--open-source-help-needed) section below!
 
 ---
 
