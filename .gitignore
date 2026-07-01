@@ -1,0 +1,14 @@
+# Python Cache
+__pycache__/
+*.pyc
+
+# Databricks Asset Bundle temporary local folders
+.databricks/
+.env/
+.venv/
+venv/
+out/
+
+# OS-specific
+Thumbs.db
+Desktop.ini

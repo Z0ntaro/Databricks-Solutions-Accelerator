@@ -1,0 +1,59 @@
+# databricks.yml - Databricks Asset Bundle (DAB) Configuration
+# This file allows developers to deploy and run the solution accelerator in production.
+
+bundle:
+  name: campaign-effectiveness-basket
+
+resources:
+  jobs:
+    campaign_effectiveness_job:
+      name: "[Production] Campaign Effectiveness & Basket Analysis"
+      # Runs automatically every night at 2 AM (workspace local time).
+      # Without this block the job only runs when someone clicks "Run Now"
+      # or triggers it manually via the CLI/API.
+      schedule:
+        quartz_cron_expression: "0 0 2 * * ?"
+        timezone_id: "UTC"
+        pause_status: "UNPAUSED"
+
+      tasks:
+        - task_key: ingest_data
+          job_cluster_key: shared_job_cluster
+          notebook_task:
+            notebook_path: ./notebooks/01_ingest.py
+            base_parameters:
+              data_path: "/Volumes/main/ci360/raw_data/transactions.csv"
+              output_table: "bronze_transactions"
+
+        - task_key: run_fpgrowth
+          depends_on:
+            - task_key: ingest_data
+          job_cluster_key: shared_job_cluster
+          notebook_task:
+            notebook_path: ./notebooks/02_fpgrowth.py
+            base_parameters:
+              min_support: "0.1"
+              min_confidence: "0.5"
+
+        - task_key: generate_recommendations
+          depends_on:
+            - task_key: run_fpgrowth
+          job_cluster_key: shared_job_cluster
+          notebook_task:
+            notebook_path: ./notebooks/03_recommend.py
+
+      job_clusters:
+        - job_cluster_key: shared_job_cluster
+          new_cluster:
+            spark_version: 14.3.x-scala2.12
+            node_type_id: Standard_D4s_v5
+            num_workers: 2
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://adb-dev.azuredatabricks.net
+  prod:
+    workspace:
+      host: https://adb-prod.azuredatabricks.net
